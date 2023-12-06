@@ -1,5 +1,7 @@
 package com.sofiya.march_2023spring.services;
 
+import com.sofiya.march_2023spring.dto.CarDto;
+import com.sofiya.march_2023spring.mapper.CarMapper;
 import com.sofiya.march_2023spring.models.Car;
 import com.sofiya.march_2023spring.repositories.CarRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,51 +22,60 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CarService {
     private final CarRepository carRepository;
-//    CarDto completeTodo(int id);
+    private final CarMapper carMapper;
 
-    public List<Car> getAll() {
-        return this.carRepository.findAll();
+    public List<CarDto> getAll() {
+        return this.carRepository.findAll().stream().map(carMapper::toDto).toList();
     }
 
-    public Optional<Car> getById(int id) {
-        return this.carRepository.findById(id);
+    public Optional<CarDto> getById(int id) {
+        return this.carRepository.findById(id).stream().map(carMapper::toDto).findFirst();
     }
 
-    public Car create(Car car) {
-        return this.carRepository.save(car);
+    public CarDto create(CarDto carDto) {
+        return carMapper.toDto(this.carRepository.save(carMapper.toEntity(carDto)));
     }
 
     public void deleteById(int id) {
         this.carRepository.deleteById(id);
     }
 
-    public Car updateCar(Car car) {
-        Car foundCar = carRepository.findById(car.getId()).get();
-        foundCar.setModel(car.getModel());
-        foundCar.setPower(car.getPower());
-        foundCar.setProducer(car.getProducer());
-        return carRepository.save(foundCar);
+//    public Car updateCar(Car car) {
+//        Car foundCar = carRepository.findById(car.getId()).get();
+//        foundCar.setModel(car.getModel());
+//        foundCar.setPower(car.getPower());
+//        foundCar.setProducer(car.getProducer());
+//        return carRepository.save(foundCar);
+//    }
+//    public CarDto updateCar(CarDto carDto) {
+//        Car foundCar = carRepository.findById(carDto.getId()).get();
+//        foundCar.setModel(carDto.getModel());
+//        foundCar.setPower(carDto.getPower());
+//        foundCar.setProducer(carDto.getProducer());
+////        return carRepository.save(foundCar);
+//        return carMapper.toDto(this.carRepository.save(carMapper.toEntity(carDto)));
+//    }
+
+//    public Car patchCarByFields(int id, Map<String, Object> fields) {
+//        Optional<Car> existingCar = carRepository.findById(id);
+//        if (existingCar.isPresent()) {
+//            fields.forEach((key, value) -> {
+//                Field field = ReflectionUtils.findField(Car.class, key);
+//                field.setAccessible(true);
+//                ReflectionUtils.setField(field, existingCar.get(), value);
+//            });
+//            return carRepository.save(existingCar.get());
+//        }
+//        return null;
+//    }
+
+    public List<CarDto> getByPower(int power) {
+
+        return this.carRepository.findAllByPower(power).stream().map(carMapper::toDto).toList();
     }
 
-    public Car patchCarByFields(int id, Map<String, Object> fields) {
-        Optional<Car> existingCar = carRepository.findById(id);
-        if (existingCar.isPresent()) {
-            fields.forEach((key, value) -> {
-                Field field = ReflectionUtils.findField(Car.class, key);
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, existingCar.get(), value);
-            });
-            return carRepository.save(existingCar.get());
-        }
-        return null;
-    }
-
-    public List<Car> getByPower(int power) {
-        return this.carRepository.findAllByPower(power);
-    }
-
-    public List<Car> getByProducer(String producer) {
-        return this.carRepository.findAllByProducer(producer);
+    public List<CarDto> getByProducer(String producer) {
+        return this.carRepository.findAllByProducer(producer).stream().map(carMapper::toDto).toList();
     }
 
 
