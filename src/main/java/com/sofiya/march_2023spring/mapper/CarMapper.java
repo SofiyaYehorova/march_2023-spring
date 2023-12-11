@@ -12,6 +12,7 @@ public class CarMapper {
                 .model(car.getModel())
                 .power(car.getPower())
                 .producer(car.getProducer())
+                .photo(car.getPhoto())
                 .build();
     }
     public Car toEntity(CarDto carDto){
@@ -19,6 +20,7 @@ public class CarMapper {
         car.setModel(carDto.getModel());
         car.setPower(carDto.getPower());
         car.setProducer(carDto.getProducer());
+        car.setPhoto(carDto.getPhoto());
         return car;
     }
 }
